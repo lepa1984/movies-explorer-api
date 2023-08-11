@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 const moviesSchema = new mongoose.Schema({
   nameRu: {
@@ -16,7 +16,7 @@ const moviesSchema = new mongoose.Schema({
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: 'user',
     required: true,
   },
   thumbnail: {
@@ -24,7 +24,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: "Не корректный URL",
+      message: 'Не корректный URL',
     },
   },
   trailerLink: {
@@ -32,7 +32,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: "Не корректный URL",
+      message: 'Не корректный URL',
     },
   },
   image: {
@@ -40,7 +40,7 @@ const moviesSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (url) => validator.isURL(url),
-      message: "Не корректный URL",
+      message: 'Не корректный URL',
     },
   },
   description: {
@@ -64,4 +64,4 @@ const moviesSchema = new mongoose.Schema({
     type: String,
   },
 });
-module.exports = mongoose.model("movies", moviesSchema);
+module.exports = mongoose.model('movies', moviesSchema);

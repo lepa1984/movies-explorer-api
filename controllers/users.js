@@ -1,25 +1,25 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
-const BadRequestError = require("../errors/BadRequest");
-const NotFoundError = require("../errors/NotFound");
-const ConflictError = require("../errors/ConflictError");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const BadRequestError = require('../errors/BadRequest');
+const NotFoundError = require('../errors/NotFound');
+const ConflictError = require('../errors/ConflictError');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   bcrypt
     .hash(password, 10)
-    .then((hash) =>
-      User.create({
-        email,
-        password: hash,
-        name,
-        about,
-        avatar,
-      })
-    )
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((user) => {
       res.status(201).send({
         name: user.name,
@@ -29,12 +29,10 @@ const createUser = (req, res, next) => {
       });
     })
     .catch((error) => {
-      if (error.name === "ValidationError") {
-        next(new BadRequestError("Переданы некорректные данные"));
+      if (error.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные'));
       } else if (error.code === 11000) {
-        next(
-          new ConflictError("Пользователь с таким email уже зарегистрирован")
-        );
+        next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
       } else {
         next(error);
       }
@@ -47,8 +45,8 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === "production" ? JWT_SECRET : "dev-secret",
-        { expiresIn: "7d" }
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
       );
       res.send({ token });
     })
@@ -72,13 +70,13 @@ const getUserById = (req, res, next) => {
   User.findById(userId)
     .then((user) => {
       if (!user) {
-        return next(new NotFoundError("Нет пользователя с таким id"));
+        return next(new NotFoundError('Нет пользователя с таким id'));
       }
       return res.send(user);
     })
     .catch((error) => {
-      if (error.name === "CastError") {
-        next(new BadRequestError("Некорректные данные пользователя"));
+      if (error.name === 'CastError') {
+        next(new BadRequestError('Некорректные данные пользователя'));
       } else {
         next(error);
       }
@@ -89,21 +87,17 @@ const updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(
     req.user._id,
     { name, about },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       if (!user) {
-        throw new NotFoundError("Нет пользователя с таким id");
+        throw new NotFoundError('Нет пользователя с таким id');
       }
       return res.send(user);
     })
     .catch((error) => {
-      if (error.name === "ValidationError") {
-        next(
-          new BadRequestError(
-            "Переданы некорректные данные при обновлении профиля"
-          )
-        );
+      if (error.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
       } else {
         next(error);
       }
@@ -116,17 +110,13 @@ const updateAvatar = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError("Нет пользователя с таким id");
+        throw new NotFoundError('Нет пользователя с таким id');
       }
       return res.send(user);
     })
     .catch((error) => {
-      if (error.name === "ValidationError") {
-        next(
-          new BadRequestError(
-            "Переданы некорректные данные при обновлении профиля"
-          )
-        );
+      if (error.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
       } else {
         next(error);
       }
@@ -136,7 +126,7 @@ const getUserInfo = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError("Нет пользователя с таким id");
+        throw new NotFoundError('Нет пользователя с таким id');
       }
       return res.send(user);
     })
