@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 
+const regexLink = /http(s)?:\/\/(www\.)?[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]+\.[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=]+/;
 const validCreateUser = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
@@ -18,17 +19,7 @@ const validLogin = celebrate({
 const userUpdateValidator = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-  }),
-});
-
-const userAvatarValidator = celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string()
-      .required()
-      .regex(
-        /^:?https?:\/\/(www\.)?[a-zA-Z\d-]+\.[\w\d\-.~:/?#[\]@!$&'()*+,;=]{2,}#?$/
-      ),
+    email: Joi.string().required().email(),
   }),
 });
 
@@ -45,9 +36,9 @@ const moviesCreateValidator = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().uri().required(),
-    trailerLink: Joi.string().uri().required(),
-    thumbnail: Joi.string().uri().required(),
+    image: Joi.string().required().regex(regexLink),
+    trailerLink: Joi.string().required().regex(regexLink),
+    thumbnail: Joi.string().required().regex(regexLink),
     movieId: Joi.number().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -64,7 +55,6 @@ module.exports = {
   validLogin,
   validCreateUser,
   userUpdateValidator,
-  userAvatarValidator,
   userIdValidator,
   moviesCreateValidator,
   moviesIdValidator,
