@@ -1,8 +1,8 @@
 const allowedCors = [
-  'http://lepa1984.nomoredomains.xyz',
-  'https://lepa1984.nomoredomains.xyz',
-  'http://lepa1984.nomoredomains.xy.nomoredomains.sbs',
-  'https://lepa1984.nomoredomains.xy.nomoredomains.sbs',
+  'http://lepa1984.nomoredomainsicu.ru/',
+  'https://lepa1984.nomoredomainsicu.ru/',
+  'http://api.lepa1984.nomoredomainsicu.ru/',
+  'https://api.lepa1984.nomoredomainsicu.ru/',
   'http://localhost:3001',
   'http://127.0.0.1:3001',
   'http://localhost:3000',
