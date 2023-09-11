@@ -9,7 +9,7 @@ const errorHandler = require('./middlewares/error-handler');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const app = express();
 mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb');
 const limiter = rateLimit({
@@ -35,5 +35,6 @@ app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Сервер запущен! Порт: ${PORT}`);
 });

@@ -6,8 +6,8 @@ const NotFound = require('../errors/NotFound');
 const { createUser, login } = require('../controllers/users');
 const { validLogin, validCreateUser } = require('../middlewares/validation');
 
-router.use('/signin', validLogin, login);
-router.use('/signup', validCreateUser, createUser);
+router.use('/sign-in', validLogin, login);
+router.use('/sign-up', validCreateUser, createUser);
 router.use(auth);
 router.use('/users', userRoutes);
 router.use('/movies', movieRoutes);
