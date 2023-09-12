@@ -12,26 +12,25 @@ const createMovie = (req, res, next) => {
     description,
     image,
     trailerLink,
-    nameRU,
-    nameEN,
     thumbnail,
     movieId,
+    nameRU,
+    nameEN,
   } = req.body;
-  const owner = req.user._id;
 
   Movie.create({
     country,
     director,
     duration,
-    owner,
     year,
     description,
     image,
     trailerLink,
+    thumbnail,
+    owner: req.user._id,
+    movieId,
     nameRU,
     nameEN,
-    thumbnail,
-    movieId,
   })
     .then((movie) => res.status(201).send(movie))
     .catch((error) => {
@@ -44,32 +43,28 @@ const createMovie = (req, res, next) => {
 };
 
 const getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user._id })
-    .then((movies) => {
-      res.send(movies);
-    })
+  const { _id } = req.user;
+
+  Movie.find({ owner: _id })
+    .then((movie) => res.send(movie))
     .catch(next);
 };
 
 const deleteMovie = (req, res, next) => {
-  Movie.findById(req.params._id)
+  const { movieId } = req.params;
+  Movie.findById(movieId)
+    .orFail(() => new NotFoundError('Фильм не найден'))
     .then((movie) => {
-      if (!movie) {
-        throw new NotFoundError('Фильм не найден.');
-      } else if (req.user._id !== movie.owner.toString()) {
-        throw new NotUserError('Нельзя удалять чужие фильмы.');
-      }
-      Movie.deleteOne(movie)
-        .then(() => res.send({ message: 'Фильм удален' }))
-        .catch(next);
-    })
-    .catch((error) => {
-      if (error.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные  '));
+      if (movie.owner.toString() === req.user._id) {
+        movie
+          .deleteOne(movie)
+          .then(() => res.send(movie))
+          .catch(next);
       } else {
-        next(error);
+        throw new NotUserError('Нельзя удалять чужие фильмы');
       }
-    });
+    })
+    .catch(next);
 };
 
 module.exports = {
