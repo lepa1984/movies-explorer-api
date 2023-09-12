@@ -1,24 +1,42 @@
 const Movie = require('../models/movies');
 const BadRequestError = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFound');
+
 const NotUserError = require('../errors/NotUser');
 
+const getMovies = (req, res, next) => {
+  Movie.find({ owner: req.user.id })
+    .then((movie) => res.send(movie))
+    .catch(next);
+};
 const createMovie = (req, res, next) => {
-  const newMoviesData = req.body;
-  return Movie.create({
-    country: newMoviesData.country,
-    director: newMoviesData.director,
-    duration: newMoviesData.duration,
-    year: newMoviesData.year,
-    description: newMoviesData.description,
-    image: newMoviesData.image,
-    trailerLink: newMoviesData.trailerLink,
-    trailer: newMoviesData.trailer,
-    owner: req.user.id,
-    nameRU: newMoviesData.nameRU,
-    nameEN: newMoviesData.nameEN,
-    thumbnail: newMoviesData.thumbnail,
-    movieId: newMoviesData.movieId,
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  } = req.body;
+
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    owner: req.user._id,
+    movieId,
+    nameRU,
+    nameEN,
   })
     .then((movie) => res.status(201).send(movie))
     .catch((error) => {
@@ -28,12 +46,6 @@ const createMovie = (req, res, next) => {
         next(error);
       }
     });
-};
-
-const getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user.id })
-    .then((movie) => res.send(movie))
-    .catch(next);
 };
 
 const deleteMovie = (req, res, next) => {
