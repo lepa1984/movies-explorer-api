@@ -4,33 +4,21 @@ const NotFoundError = require('../errors/NotFound');
 const NotUserError = require('../errors/NotUser');
 
 const createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
-  } = req.body;
-
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    owner: req.user._id,
-    movieId,
-    nameRU,
-    nameEN,
+  const newMoviesData = req.body;
+  return Movie.create({
+    country: newMoviesData.country,
+    director: newMoviesData.director,
+    duration: newMoviesData.duration,
+    year: newMoviesData.year,
+    description: newMoviesData.description,
+    image: newMoviesData.image,
+    trailerLink: newMoviesData.trailerLink,
+    trailer: newMoviesData.trailer,
+    owner: req.user.id,
+    nameRU: newMoviesData.nameRU,
+    nameEN: newMoviesData.nameEN,
+    thumbnail: newMoviesData.thumbnail,
+    movieId: newMoviesData.movieId,
   })
     .then((movie) => res.status(201).send(movie))
     .catch((error) => {
@@ -43,9 +31,7 @@ const createMovie = (req, res, next) => {
 };
 
 const getMovies = (req, res, next) => {
-  const { _id } = req.user;
-
-  Movie.find({ owner: _id })
+  Movie.find({ owner: req.user.id })
     .then((movie) => res.send(movie))
     .catch(next);
 };

@@ -2,66 +2,66 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 
 const moviesSchema = new mongoose.Schema({
-  nameRu: {
+  country: {
     type: String,
     required: true,
   },
-  nameEn: {
+  director: {
     type: String,
     required: true,
   },
-  movieId: {
-    required: true,
+  duration: {
     type: Number,
+    required: true,
+  },
+  year: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+    validator: {
+      validator: (url) => validator.isURL(url),
+      message: 'Некорректная ссылка',
+    },
+  },
+  trailerLink: {
+    type: String,
+    required: true,
+    validator: {
+      validator: (url) => validator.isURL(url),
+      message: 'Некорректная ссылка',
+    },
+  },
+  thumbnail: {
+    type: String,
+    required: true,
+    validator: {
+      validator: (url) => validator.isURL(url),
+      message: 'Некорректная ссылка',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
   },
-  thumbnail: {
-    required: true,
-    type: String,
-    validate: {
-      validator: (url) => validator.isURL(url),
-      message: 'Не корректный URL',
-    },
-  },
-  trailerLink: {
-    required: true,
-    type: String,
-    validate: {
-      validator: (url) => validator.isURL(url),
-      message: 'Не корректный URL',
-    },
-  },
-  image: {
-    required: true,
-    type: String,
-    validate: {
-      validator: (url) => validator.isURL(url),
-      message: 'Не корректный URL',
-    },
-  },
-  description: {
-    required: true,
-    type: String,
-  },
-  year: {
-    required: true,
-    type: String,
-  },
-  duration: {
-    required: true,
+  movieId: {
     type: Number,
-  },
-  director: {
     required: true,
-    type: String,
   },
-  country: {
-    required: true,
+  nameRU: {
     type: String,
+    required: true,
+  },
+  nameEN: {
+    type: String,
+    required: true,
   },
 });
 module.exports = mongoose.model('movies', moviesSchema);
