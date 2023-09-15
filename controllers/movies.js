@@ -5,7 +5,7 @@ const NotFoundError = require('../errors/NotFound');
 const NotUserError = require('../errors/NotUser');
 
 const getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user.id })
+  Movie.find({ owner: req.user._id })
     .then((movie) => res.send(movie))
     .catch(next);
 };
@@ -33,7 +33,7 @@ const createMovie = (req, res, next) => {
     image,
     trailerLink,
     thumbnail,
-    owner: req.user.id,
+    owner: req.user._id,
     movieId,
     nameRU,
     nameEN,
@@ -53,7 +53,7 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .orFail(() => new NotFoundError('Фильм не найден'))
     .then((movie) => {
-      if (movie.owner.toString() === req.user.id) {
+      if (movie.owner.toString() === req.user._id) {
         movie
           .deleteOne(movie)
           .then(() => res.send(movie))
