@@ -33,7 +33,7 @@ const createMovie = (req, res, next) => {
     image,
     trailerLink,
     thumbnail,
-    owner: req.user._id,
+    owner: req.user.id,
     movieId,
     nameRU,
     nameEN,
@@ -53,7 +53,7 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(movieId)
     .orFail(() => new NotFoundError('Фильм не найден'))
     .then((movie) => {
-      if (movie.owner.toString() === req.user._id) {
+      if (movie.owner.toString() === req.user.id) {
         movie
           .deleteOne(movie)
           .then(() => res.send(movie))
